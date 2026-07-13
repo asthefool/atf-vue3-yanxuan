@@ -16,7 +16,7 @@
 
       <div v-else-if="!goods.length" class="state-empty">暂无商品</div>
       <!-- 使用默认插槽 -->
-      <ul v-if="goods.length" class="goods-list">
+      <ul v-else class="goods-list">
         <li class="item" v-for="item in goods" :key="item.id">
           <router-link to="/">
             <img :src="item.listPicUrl" alt="" />
@@ -28,8 +28,6 @@
           </router-link>
         </li>
       </ul>
-
-      
 
       <!-- <div v-else class="goods-list">
 
@@ -84,7 +82,7 @@ export default {
         if (String(res.code) !== "200") {
           throw new Error(res.msg || "接口请求失败");
         }
-        
+
         goods.value = res.data?.result?.slice(0, 4) || [];
       } catch (err) {
         goods.value = [];
@@ -103,6 +101,20 @@ export default {
 
 <style lang="less" scoped>
 .home-new {
+  .state-error,
+  .state-empty {
+    padding: 60px 0;
+    text-align: center;
+    color: #666;
+  }
+
+  .state-error button {
+    margin-left: 12px;
+    padding: 6px 12px;
+    border: 1px solid #999;
+    background: #fff;
+    cursor: pointer;
+  }
   .goods-list {
     margin-bottom: 40px;
     display: flex;
