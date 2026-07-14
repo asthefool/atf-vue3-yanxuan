@@ -90,6 +90,10 @@ npm run build
 
 构建产物输出到 `dist/`。当前构建可以成功完成，但 vendor 包包含完整的 Element Plus，构建工具会提示资源体积超过推荐值；如需用于生产环境，可进一步采用按需引入和路由/组件拆包优化体积。
 
+## 线上部署
+在线演示版本使用 public/mock 下的静态 JSON，以保证静态托管环境可以正常访问。
+本地开发版本可以运行 node server/index.js，使用 Express Mock 接口
+
 ## 路由
 
 | 地址 | 页面 | 状态 |
