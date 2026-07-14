@@ -19,7 +19,7 @@
       <ul v-else class="goods-list">
         <li class="item" v-for="item in goods" :key="item.id">
           <router-link to="/">
-            <img :src="item.listPicUrl" alt="" />
+            <img :src="item.listPicUrl" :alt="item.name" />
             <div class="title ellipsis">{{ item.name }}</div>
             <div class="price">
               ￥{{ item.retailPrice }}
@@ -117,17 +117,23 @@ export default {
   }
   .goods-list {
     margin-bottom: 40px;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+
     .item {
       background-color: #f5f5f5;
-      width: 265px;
-      height: 365px;
+      min-width: 0;
+      padding-bottom: 18px;
+
       img {
-        width: 265px;
-        height: 265px;
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
       }
+
       .hovershadow();
+
       .title {
         font-size: 17px;
         text-align: center;
@@ -142,6 +148,33 @@ export default {
         }
       }
     }
+  }
+}
+
+@media (max-width: 1023px) {
+  .home-new .goods-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .home-new .goods-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .home-new .goods-list .item {
+    padding-bottom: 12px;
+  }
+
+  .home-new .goods-list .item .title {
+    padding: 12px 8px 8px;
+    font-size: 15px;
+  }
+
+  .home-new .goods-list .item .price {
+    font-size: 14px;
   }
 }
 </style>

@@ -67,4 +67,9 @@ export default {
     }
   }
 }
+@media (max-width: 767px) {
+  .app-top-nav {
+    display: none;
+  }
+}
 </style>

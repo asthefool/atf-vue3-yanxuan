@@ -4,7 +4,7 @@
       <ul class="goods-list">
         <li class="item" v-for="item in Hot" :key="item.id">
           <router-link to="/">
-            <img :src="item.listPicUrl" alt="" />
+            <img :src="item.listPicUrl" :alt="item.name" />
             <div class="title ellipsis-2">{{ item.name }}</div>
           </router-link>
         </li>
@@ -43,36 +43,53 @@ export default {
 <style lang="less" scoped>
 .home-hot {
   .goods-list {
-    overflow: hidden;
     margin-bottom: 40px;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
 
     .item {
       background-color: #f5f5f5;
-      width: 265px;
-      height: 365px;
-      margin-right: 10px;
+      min-width: 0;
+      padding-bottom: 18px;
 
       img {
-        width: 265px;
-        height: 265px;
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
       }
+
       .hovershadow();
+
       .title {
         font-size: 17px;
         text-align: center;
-        padding: 15px 25pxs;
-      }
-      .price {
-        color: @priceColor;
-        font-size: 15px;
-        text-align: center;
-        del {
-          color: #666;
-        }
+        padding: 15px 25px;
       }
     }
+  }
+}
+
+@media (max-width: 1023px) {
+  .home-hot .goods-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .home-hot .goods-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .home-hot .goods-list .item {
+    padding-bottom: 10px;
+  }
+
+  .home-hot .goods-list .item .title {
+    padding: 12px 8px;
+    font-size: 15px;
   }
 }
 </style>

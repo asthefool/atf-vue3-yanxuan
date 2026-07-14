@@ -1,58 +1,95 @@
 /*css初始化文件*/
-body,ul,li,p,h1,h2,h3,h4,h5{
-    margin:0;
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 100%;
+}
+
+body,
+ul,
+li,
+p,
+h1,
+h2,
+h3,
+h4,
+h5 {
+    margin: 0;
     padding: 0;
 }
-ul{
+
+ul {
     list-style: none;
 }
-a{
+
+a {
     text-decoration: none;
     color: #333;
     outline: none;
 }
-img{
-    border: 0;
+
+img {
+    display: block;
+    max-width: 100%;
 }
-body{
-    min-width: 1100px;
-    height: 100%;
-    font-size:14px ;
-    font-family:'微软雅黑',Arial,Helvetice,sans-serif;
+
+body {
+    min-width: 0;
+    min-height: 100%;
+    color: #333;
+    background: #fff;
+    font-size: 14px;
+    font-family: "Microsoft YaHei", Arial, Helvetica, sans-serif;
 }
-input{
+
+input {
     outline: none;
 }
+
 /* 提取版心 */
-.w{
-    width: 1100px;
+.w {
+    width: 100%;
+    max-width: 1132px;
     margin: 0 auto;
+    padding-right: 16px;
+    padding-left: 16px;
 }
-.ellipsis{
+
+.ellipsis {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
 }
 
 /* 超过两行生省略号 */
-.ellipsis-2{
-    word-break: break-all;  /*哪怕是一个长到逆天的英文单词（比如超级长链接），也必须在行末给我强制换行，绝对不能撑破边界。*/
-    text-overflow: ellipsis;    /*给被切掉的文字后面加上终结符号—— ...（省略号）。*/
-    display: -webkit-box;   /*使用 WebKit 内核的弹性盒子*/
-    -webkit-box-orient: vertical;   /*设置排列方式为垂直*/
-    -webkit-line-clamp: 2;  /*意思是“最多只留 2 行”。*/
-    overflow: hidden;   /*只要文字超出了我们指定的区域，一律切掉，不让它漏出来丑化页面*/
+.ellipsis-2 {
+    word-break: break-all;
+    /*哪怕是一个长到逆天的英文单词（比如超级长链接），也必须在行末给我强制换行，绝对不能撑破边界。*/
+    text-overflow: ellipsis;
+    /*给被切掉的文字后面加上终结符号—— ...（省略号）。*/
+    display: -webkit-box;
+    /*使用 WebKit 内核的弹性盒子*/
+    -webkit-box-orient: vertical;
+    /*设置排列方式为垂直*/
+    -webkit-line-clamp: 2;
+    /*意思是“最多只留 2 行”。*/
+    overflow: hidden;
+    /*只要文字超出了我们指定的区域，一律切掉，不让它漏出来丑化页面*/
 }
 
-.fr{
+.fr {
     float: right;
 }
 
-.fl{
+.fl {
     float: left;
 }
 
-.clearfix::after{
+.clearfix::after {
     content: '.';
     display: block;
     visibility: hidden;
@@ -62,14 +99,9 @@ input{
 }
 
 
-/* 移动端布局 */
-html{
-    font-size: 13.3333333vw;
-
-}
-/* 防止字体过大 */
-@media (min-width:750px){
-    html{
-        font-size:100px;
+@media (max-width: 767px) {
+    .w {
+        padding-left: 12px;
+        padding-right: 12px;
     }
 }

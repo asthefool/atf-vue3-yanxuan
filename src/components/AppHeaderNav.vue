@@ -60,10 +60,12 @@ export default {
 <style lang="less" scoped>
 .app-header-nav {
   position: relative;
-  clear: both;
+  display: flex;
+  width: 100%;
   z-index: 999;
+
   .item {
-    float: left;
+    flex: 0 0 auto;
     padding: 0 10px;
     font-weight: bold;
     height: 40px;
@@ -99,10 +101,10 @@ export default {
     opacity: 0;
     box-shadow: 0 0 5px #ccc;
     background-color: #fff;
-    width: 1090px;
+    width: 100%;
     height: 0;
     overflow: hidden;
-    transition: all 0.5s;
+    transition: height 0.25s ease, opacity 0.2s ease;
     ul {
       display: flex;
 
@@ -122,6 +124,37 @@ export default {
         }
       }
     }
+  }
+}
+
+@media (max-width: 1023px) {
+  .app-header-nav {
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .app-header-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .app-header-nav .item {
+    padding: 0;
+    height: 44px;
+    line-height: 44px;
+  }
+
+  .app-header-nav .item .link {
+    display: block;
+    min-height: 44px;
+    padding: 0 14px;
+    line-height: 44px;
+  }
+
+  .app-header-nav .item .layer {
+    display: none !important;
   }
 }
 </style>
