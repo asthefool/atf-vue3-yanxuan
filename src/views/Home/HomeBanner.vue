@@ -1,34 +1,73 @@
 <template>
-  <div>
-    <!--
-        全局组件 
-        步骤：
-         1.封装一个轮播图xtx-carousel，注册成全局组件
-         2.准备一个HomeBanner.vue,使用 -->
-    <AppBanner :list="list" />
+  <div class="home-banner">
+    <HomeBannerSkeleton v-if="loading" />
+
+    <div v-else-if="error" class="state-error">
+      <span>{{ error }}</span>
+      <button type="button" @click="getBannerList">重新加载</button>
+    </div>
+
+    <div v-else-if="!list.length" class="state-empty">暂无轮播内容</div>
+
+    <AppBanner v-else :list="list" />
   </div>
 </template>
 
 <script>
 import { ref } from "vue";
 import { getBanner } from "@/api";
-export default {
-  setup(props) {
-    const list = ref([]);
-    getBanner()
-      .then((res) => {
-        console.log(res);
-        if (res.msg === "操作成功") {
-          list.value = res.result;
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+import HomeBannerSkeleton from "@/components/Skeleton/HomeBannerSkeleton.vue";
 
-    return { list };
+export default {
+  components: { HomeBannerSkeleton },
+  setup() {
+    const list = ref([]);
+    const loading = ref(false);
+    const error = ref("");
+
+    const getBannerList = async () => {
+      loading.value = true;
+      error.value = "";
+
+      try {
+        const res = await getBanner();
+        if (res.msg !== "操作成功") {
+          throw new Error(res.msg || "轮播图请求失败");
+        }
+        list.value = Array.isArray(res.result) ? res.result : [];
+      } catch (err) {
+        list.value = [];
+        error.value = "轮播图加载失败";
+        console.error(err);
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    getBannerList();
+
+    return { list, loading, error, getBannerList };
   },
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.state-error,
+.state-empty {
+  display: flex;
+  min-height: clamp(180px, 28vw, 400px);
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #f5f5f5;
+  color: #666;
+}
+
+.state-error button {
+  padding: 6px 12px;
+  border: 1px solid #999;
+  background: #fff;
+  color: inherit;
+  cursor: pointer;
+}
+</style>

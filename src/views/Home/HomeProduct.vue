@@ -1,63 +1,85 @@
 <template>
   <div class="home-product">
-    <MyPanel
-      v-for="item in products"
-      :key="item.id"
-      :title="item.name"
-      subTitle=""
-    >
-      <template #right>
-        <div class="sub">
-          <router-link v-for="sub in item.children" :key="sub.id" to="/">
-            {{ sub.name }}
+    <HomeProductSkeleton v-if="loading" />
+
+    <div v-else-if="error" class="state-error">
+      <span>{{ error }}</span>
+      <button type="button" @click="getProductList">重新加载</button>
+    </div>
+
+    <div v-else-if="!products.length" class="state-empty">暂无商品专区</div>
+
+    <template v-else>
+      <MyPanel
+        v-for="item in products"
+        :key="item.id"
+        :title="item.name"
+        subTitle=""
+      >
+        <template #right>
+          <div class="sub">
+            <router-link v-for="sub in item.children" :key="sub.id" to="/">
+              {{ sub.name }}
+            </router-link>
+          </div>
+          <AppMore />
+        </template>
+
+        <div class="goods">
+          <router-link class="left" to="/">
+            <img :src="item.picture" :alt="item.name" />
           </router-link>
-        </div>
-        <AppMore />
-      </template>
 
-      <div class="goods">
-        <router-link class="left" to="/">
-          <img :src="item.picture" :alt="item.name" />
-        </router-link>
-
-        <div class="right">
-          <ul class="goods-list">
-            <li v-for="good in item.goods" :key="good.id">
-              <MyGoodsItem :good="good" />
-            </li>
-          </ul>
+          <div class="right">
+            <ul class="goods-list">
+              <li v-for="good in item.goods" :key="good.id">
+                <MyGoodsItem :good="good" />
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </MyPanel>
+      </MyPanel>
+    </template>
   </div>
 </template>
 
 <script>
 import MyGoodsItem from '@/components/MyGoodsItem.vue';
 import MyPanel from '@/components/MyPanel.vue';
-import {getProducts} from '@/api'
-import {ref} from 'vue'
+import { getProducts } from '@/api';
+import { ref } from 'vue';
+import HomeProductSkeleton from '@/components/Skeleton/HomeProductSkeleton.vue';
     export default {
       components:{
         MyPanel,
-        MyGoodsItem
+        MyGoodsItem,
+        HomeProductSkeleton
       },
-      setup(props){
-        const products=ref([])
-        const getProduct=async ()=>{
-            try{
-                const res=await getProducts();
-                console.log(res)
-                if(res.msg=='操作成功'){
-                    products.value=res.result;
-                }
-            }catch(error){
-                console.log(error)
+      setup(){
+        const products = ref([]);
+        const loading = ref(false);
+        const error = ref('');
+        const getProductList = async () => {
+          loading.value = true;
+          error.value = '';
+
+          try {
+            const res = await getProducts();
+            if (res.msg !== '操作成功') {
+              throw new Error(res.msg || '商品专区请求失败');
             }
-        }
-        getProduct();
-        return{products}
-    }
+            products.value = Array.isArray(res.result) ? res.result : [];
+          } catch (err) {
+            products.value = [];
+            error.value = '商品专区加载失败';
+            console.error(err);
+          } finally {
+            loading.value = false;
+          }
+        };
+        getProductList();
+        return { products, loading, error, getProductList };
+      }
     }
 </script>
 
@@ -65,6 +87,24 @@ import {ref} from 'vue'
 .home-product {
   padding-bottom: 40px;
   background-color: #fff;
+
+  .state-error,
+  .state-empty {
+    display: flex;
+    min-height: 360px;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #666;
+  }
+
+  .state-error button {
+    padding: 6px 12px;
+    border: 1px solid #999;
+    background: #fff;
+    color: inherit;
+    cursor: pointer;
+  }
 
   .sub {
     a {
@@ -149,6 +189,11 @@ import {ref} from 'vue'
   .home-product .goods .right .goods-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
+  }
+
+  .home-product .state-error,
+  .home-product .state-empty {
+    min-height: 220px;
   }
 }
 </style>
